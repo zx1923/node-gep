@@ -38,7 +38,7 @@ class Chromosome {
   /**
    * 生成使用linkFunc连接的基因值
    */
-  getValue() {
+  getReduceValue() {
     let sum = 0;
     const func = (row, col) => {
       const val = this.genesMap[row][col].getValue();

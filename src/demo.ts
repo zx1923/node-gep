@@ -3,7 +3,8 @@ import Env from "./gep/env";
 import Activation from "./modules/activation";
 import Chromosome from './gep/chromosome';
 import Gene from './gep/gene';
-import { OperItem, ChromosomeOption } from "./types";
+import { OperItem, ChromosomeOption, AgentOption } from "./types";
+import Agent from './gep/agent';
 
 const operators = new Operator();
 operators.setVars('1', 1);
@@ -27,8 +28,11 @@ const chromoOpts: ChromosomeOption = {
   activation: Activation.none
 };
 
-const chromo = new Chromosome(chromoOpts);
+const agent = new Agent({
+  chromosomeLen: 1,
+  chromesomeOption: chromoOpts
+});
 
 const start = Date.now();
-console.log(chromo.getShapeValue());
+console.log(agent.getChromoValue());
 console.log(Date.now() - start, 'ms');
