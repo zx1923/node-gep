@@ -7,10 +7,9 @@ import Env from './env';
 class Gene {
   headLen: number
   private genes: Array<OperItem>
-  activeFunc: Function
 
   constructor(geneSets?: Array<OperItem>) {
-    const { operSets, headLen, maxpLen, activation } = Env.getOptions();
+    const { operSets, headLen, maxpLen } = Env.getOptions();
     this.headLen = headLen;
     
     if (geneSets == undefined || !Array.isArray(geneSets) || !geneSets.length) {
@@ -18,16 +17,6 @@ class Gene {
     } else {
       this.genes = [...geneSets];
     }
-
-    this.activeFunc = activation || Activation.none;
-  }
-
-  /**
-   * 设置激活函数
-   * @param func 激活函数
-   */
-  setActivationFunc(func: typeof Activation) {
-    this.activeFunc = func;
   }
 
   /**
@@ -52,7 +41,7 @@ class Gene {
    */
   getValue() {
     const result = Gene.calculate(Gene.createComputeTree(this.genes));
-    return this.activeFunc(result[0]);
+    return result[0];
   }
 
   /**

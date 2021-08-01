@@ -12,16 +12,13 @@ const BuildInFuncs: object = {
     return a * b;
   },
   '/': (a: number, b: number) => {
-    return a / b;
+    return b === 0 ? 0 : a / b;
   },
   sqrt: (a: number) => {
     return a <= 0 ? 0 : Math.sqrt(a);
   },
   log: (a: number) => {
     return a <= 0 ? 0 : Math.log(a);
-  },
-  exp: (a: number) => {
-    return Math.exp(a);
   },
   pow: (a: number, b: number) => {
     if (a < 0 && b < 1) {
@@ -35,8 +32,14 @@ const BuildInFuncs: object = {
   cos: (a: number) => {
     return Math.cos(a);
   },
-  tan: (a: number) => {
-    return Math.tan(a);
+  max: (a: number, b: number) => {
+    return Math.max(a, b);
+  },
+  min: (a: number, b: number) => {
+    return Math.min(a, b);
+  },
+  'a>b?c:d': (a: number, b: number, c: number, d: number) => {
+    return a > b ? c : d;
   }
 }
 

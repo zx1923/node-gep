@@ -1,16 +1,21 @@
 import Gene from './gene';
 import { isArray, } from '../utils/helper';
 import { ChromosomeOption, OperItem, ChromosomeReduceFunc } from '../types';
+import Activation from '../modules/activation';
 
 class Chromosome {
-  genesMap: Array<Gene>[]
+  private genesMap: Array<Gene>[]
   shape: [number, number]
   linkFunc: typeof ChromosomeReduceFunc
-  lastShapeValue: Array<number>[]
+  private lastShapeValue: Array<number>[]
+  private activeFunc: Function
 
   constructor(option: ChromosomeOption, chromoGeneSets: Array<Gene>[] = []) {
-    this.shape = option.shape;
-    this.linkFunc = option.linkFunc.bind(this);
+    const { shape, linkFunc, activation } = option;
+    this.shape = (shape && shape.length === 2) ? shape : [1, 1];
+    this.linkFunc = linkFunc ? linkFunc.bind(this) : () => {};
+    this.activeFunc = activation || Activation.none;
+
     this.lastShapeValue = [];
     if (!chromoGeneSets || !isArray(chromoGeneSets) || !chromoGeneSets.length) {
       this.genesMap = Chromosome.createGenesUseShape(this.shape);
@@ -38,10 +43,10 @@ class Chromosome {
     const func = (row, col) => {
       const val = this.genesMap[row][col].getValue();
       sum += val;
-      return val;
+      return this.activeFunc(val);
     };
     this.lastShapeValue = Chromosome.reduce(this.shape, func);
-    return sum;
+    return this.activeFunc(sum);
   }
 
   /**
