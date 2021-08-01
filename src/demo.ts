@@ -1,8 +1,9 @@
 import Operator from "./modules/operator";
 import Env from "./gep/env";
 import Activation from "./modules/activation";
+import Chromosome from './gep/chromosome';
 import Gene from './gep/gene';
-import { OperItem } from "./types";
+import { OperItem, ChromosomeOption } from "./types";
 
 const operators = new Operator();
 operators.setVars('1', 1);
@@ -22,6 +23,16 @@ const envOpts = {
 
 Env.setOptions(envOpts);
 
-const gene = new Gene();
-console.log(gene.getGenes())
-console.log(gene.getValue());
+const chromoOpts: ChromosomeOption = {
+  shape: [3, 1],
+  linkFunc: () => {}
+};
+
+const chromo = new Chromosome(chromoOpts);
+
+console.log(chromo.getGenes());
+console.log(chromo.getValue());
+
+// const gene = new Gene();
+// console.log(gene.getGenes())
+// console.log(gene.getValue());

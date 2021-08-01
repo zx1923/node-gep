@@ -51,8 +51,19 @@ class Gene {
    * @returns 
    */
   getValue() {
-    const result = Gene.calculate(Gene.decode(this.genes));
+    const result = Gene.calculate(Gene.createComputeTree(this.genes));
     return this.activeFunc(result[0]);
+  }
+
+  /**
+   * 返回基因的编码数组
+   */
+  encode() {
+    const chars = [];
+    this.genes.forEach(el => {
+      chars.push(el.name);
+    });
+    return chars;
   }
 
   /**
@@ -62,10 +73,10 @@ class Gene {
    * @param tnode ComputeNode对象
    * @returns 
    */
-  static decode(genes: Array<OperItem>, index = 0, tnode?: Array<ComputeNode>): Array<ComputeNode> {
+  static createComputeTree(genes: Array<OperItem>, index = 0, tnode?: Array<ComputeNode>): Array<ComputeNode> {
     if (index === 0) {
       tnode = [ new ComputeNode(genes[index]) ];
-      return this.decode(genes, index + 1, tnode);
+      return this.createComputeTree(genes, index + 1, tnode);
     }
     const gnodeArray = [];
     tnode.forEach(node => {
@@ -79,7 +90,7 @@ class Gene {
       return tnode;
     }
     let n = 0;
-    const newTnodeArr = this.decode(genes, index, gnodeArray);
+    const newTnodeArr = this.createComputeTree(genes, index, gnodeArray);
     tnode.forEach(node => {
       for (let i = 0; i < node.plen; i++) {
         node.params.push(newTnodeArr[n]);

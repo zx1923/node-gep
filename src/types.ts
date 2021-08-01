@@ -4,6 +4,20 @@ enum GenePartAs {
   Mother = 'mother'
 };
 
+declare function ChromosomeReduceFunc(row: number, col:number);
+interface ChromosomeOption {
+  shape: [number, number]             // 基因形
+  linkFunc: typeof ChromosomeReduceFunc // 基因连接函数
+}
+
+interface AgentOption {
+  chromosomeLen: number
+  linkFunc: Function
+}
+
+interface PopulationOption {
+  agentLen: number
+}
 interface OperItem {
   func: Function
   name: string
@@ -36,4 +50,8 @@ export {
   GenePart,
   OperItem,
   OperSets,
+  ChromosomeOption,
+  ChromosomeReduceFunc,
+  AgentOption,
+  PopulationOption
 };
