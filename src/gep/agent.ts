@@ -1,15 +1,28 @@
 import Gene from './gene';
 import Env from './env';
 import Chromosome from './chromosome';
-import { AgentOption, ChromosomeOption, AgentChromeLinkFunc } from '../types';
+import Loss from '../modules/loss';
+import { AgentOption, ChromosomeOption, AgentChromeLinkFunc, AgentLossFunc, DataInput } from '../types';
+
+interface ChromoValueResult {
+  reduceValue: Array<number>
+  shapeValue: number[][]
+};
+
+interface ChromoItem {
+  chromo: Chromosome
+  lossValue: number
+};
 
 class Agent {
-  private chromosomeList: Chromosome[]
+  private chromosomeList: ChromoItem[]
   chromoLinkFunc: typeof AgentChromeLinkFunc
+  chromoLossFunc: typeof AgentLossFunc
 
   constructor(options: AgentOption) {
-    const { chromosomeLen, chromesomeOption, linkFunc } = options;
+    const { chromosomeLen = 1, chromesomeOption, linkFunc, lossFunc } = options;
     this.chromoLinkFunc = linkFunc;
+    this.chromoLossFunc = lossFunc || Loss.absolute;
 
     if (chromosomeLen) {
       this.chromosomeList = Agent.createChromosomes(chromosomeLen, chromesomeOption);
@@ -19,22 +32,45 @@ class Agent {
   }
 
   getChromosomes() {
-    return this.chromosomeList;
+    return this.chromosomeList[0].chromo;
   }
 
   /**
    * 计算适应度
    */
-  getFitness() {
-    
+  getFitness(xdata: Array<DataInput>, ydata: Array<number>) {
+    this.calculateFitness(xdata, ydata);
+    return this.chromosomeList[0].lossValue;
+  }
+
+  calculateFitness(xdata: Array<DataInput>, ydata: Array<number>) {
+    if (!xdata.length || xdata.length !== ydata.length) {
+      throw new Error(`The input data is invalid`);
+    }
+    // TODO: 对染色体的适应度重新进行整理计算
+    this.chromosomeList.forEach(item => {
+      const reduceResArray = item.chromo.getReduceValue(xdata);
+      item.lossValue = this.chromoLossFunc(reduceResArray, ydata);
+    });
+    Agent.fitnessSort(this.chromosomeList);
   }
 
   /**
    * 获取染色体的值
    * @returns 
    */
-   getChromoValue() {
-    return Agent.chromosomeFitness(this.chromosomeList);
+  getChromoValue(xdata: DataInput) {
+    return Agent.chromosomeGetValue(this.chromosomeList, xdata);
+  }
+
+  /**
+   * 根据染色体的适应度进行排序
+   * @param chromoList 染色体数组
+   */
+  static fitnessSort(chromoList: ChromoItem[]) {
+    chromoList.sort((a, b) => {
+      return a.lossValue - b.lossValue;
+    });
   }
 
   /**
@@ -42,12 +78,12 @@ class Agent {
    * @param chromoList 染色体数组
    * @returns 
    */
-  static chromosomeFitness(chromoList: Chromosome[]) {
-    const res = [];
-    chromoList.forEach(chromo => {
+  static chromosomeGetValue(chromoList: ChromoItem[], xdata: DataInput) {
+    const res: ChromoValueResult[] = [];
+    chromoList.forEach(item => {
       res.push({
-        reduceValue: chromo.getReduceValue(),
-        shapeValue: chromo.getShapeValue()
+        reduceValue: item.chromo.getReduceValue(xdata),
+        shapeValue: item.chromo.getShapeValue(xdata)
       });
     });
     return res;
@@ -59,10 +95,13 @@ class Agent {
    * @param chromoOptions 染色体规则
    * @returns 
    */
-  static createChromosomes(count: number, chromoOptions: ChromosomeOption): Chromosome[] {
+  static createChromosomes(count: number, chromoOptions: ChromosomeOption): ChromoItem[] {
     const res = [];
     for (let i = 0; i < count; i++) {
-      res.push(new Chromosome(chromoOptions));
+      res.push({
+        chromo: new Chromosome(chromoOptions),
+        lossValue: -1
+      });
     }
     return res;
   }
