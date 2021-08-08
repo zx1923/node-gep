@@ -2,18 +2,19 @@ import Gene from './gene';
 import { isArray, } from '../utils/helper';
 import { ChromosomeOption, OperItem, ChromosomeReduceFunc, DataInput } from '../types';
 import Activation from '../modules/activation';
+import Link from '../modules/link';
 
 class Chromosome {
   private genesMap: Array<Gene>[]
   shape: [number, number]
-  linkFunc: typeof ChromosomeReduceFunc
+  linkFunc: typeof ChromosomeReduceFunc   // TODO: 连接函数，保留
   private lastShapeValue: Array<number>[]
   private activeFunc: Function
 
   constructor(option: ChromosomeOption, chromoGeneSets: Array<Gene>[] = []) {
     const { shape, linkFunc, activation } = option;
     this.shape = (shape && shape.length === 2) ? shape : [1, 1];
-    this.linkFunc = linkFunc ? linkFunc.bind(this) : () => {};
+    this.linkFunc = linkFunc || Link.addUp;
     this.activeFunc = activation || Activation.none;
 
     this.lastShapeValue = [];
@@ -36,7 +37,7 @@ class Chromosome {
   }
 
   /**
-   * 生成使用linkFunc连接的基因值
+   * 生成相加后的基因值
    */
   getReduceValue(xdata: DataInput | DataInput[]) {
     const xinputArray = Array.isArray(xdata) ? xdata : [xdata];

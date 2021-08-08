@@ -1,8 +1,7 @@
-import Gene from './gene';
-import Env from './env';
 import Chromosome from './chromosome';
 import Loss from '../modules/loss';
 import { AgentOption, ChromosomeOption, AgentChromeLinkFunc, AgentLossFunc, DataInput } from '../types';
+import Link from '../modules/link';
 
 interface ChromoValueResult {
   reduceValue: Array<number>
@@ -16,12 +15,12 @@ interface ChromoItem {
 
 class Agent {
   private chromosomeList: ChromoItem[]
-  chromoLinkFunc: typeof AgentChromeLinkFunc
+  chromoLinkFunc: typeof AgentChromeLinkFunc // TODO: 连接函数，保留
   chromoLossFunc: typeof AgentLossFunc
 
   constructor(options: AgentOption) {
     const { chromosomeLen = 1, chromesomeOption, linkFunc, lossFunc } = options;
-    this.chromoLinkFunc = linkFunc;
+    this.chromoLinkFunc = linkFunc || Link.addUp;
     this.chromoLossFunc = lossFunc || Loss.absolute;
 
     if (chromosomeLen) {

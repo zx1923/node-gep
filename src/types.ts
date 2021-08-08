@@ -21,9 +21,6 @@ interface AgentOption {
   activation?: Function
 }
 
-interface PopulationOption {
-  agentLen?: number
-}
 interface OperItem {
   func: Function
   name: string
@@ -51,6 +48,14 @@ interface GenePart {
 
 interface DataInput {
   [key: string]: number
+};
+
+interface PopulationOption {
+  agent: AgentOption
+  count: number
+  topn: number
+  iteration?: number
+  stopLoss?: number
 };
 
 export {
