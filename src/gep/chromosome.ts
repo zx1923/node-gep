@@ -38,15 +38,20 @@ class Chromosome {
   /**
    * 生成使用linkFunc连接的基因值
    */
-  getReduceValue(xdata: DataInput) {
-    let sum = 0;
-    const func = (row, col) => {
-      const val = this.genesMap[row][col].getValue(xdata);
-      sum += val;
-      return this.activeFunc(val);
-    };
-    this.lastShapeValue = Chromosome.reduce(this.shape, func);
-    return this.activeFunc(sum);
+  getReduceValue(xdata: DataInput | DataInput[]) {
+    const xinputArray = Array.isArray(xdata) ? xdata : [xdata];
+    const result: number[] = [];
+    xinputArray.forEach(inpx => {
+      let sum = 0;
+      const func = (row, col) => {
+        const val = this.genesMap[row][col].getValue(inpx);
+        sum += val;
+        return this.activeFunc(val);
+      };
+      this.lastShapeValue = Chromosome.reduce(this.shape, func);
+      result.push(this.activeFunc(sum));
+    });
+    return result;
   }
 
   /**

@@ -75,7 +75,7 @@ class Operator {
     this.funcs[name] = fn;
   }
 
-  setVars(name: string, value: any | Function) {
+  setVars(name: string, value: any | Function = 0) {
     this.vars[name] = isFunction(value) ? value : (() => value);
   }
 
