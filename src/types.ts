@@ -6,6 +6,7 @@ enum GenePartAs {
 
 declare function ChromosomeReduceFunc(row: number, col:number);
 declare function AgentChromeLinkFunc(prev, curt);
+declare function AgentLossFunc(out: number, target: number);
 interface ChromosomeOption {
   shape: [number, number]               // 基因形
   linkFunc?: typeof ChromosomeReduceFunc // 基因连接函数
@@ -15,6 +16,7 @@ interface ChromosomeOption {
 interface AgentOption {
   chromosomeLen: number
   chromesomeOption: ChromosomeOption
+  lossFunc?: typeof AgentLossFunc
   linkFunc?: typeof AgentChromeLinkFunc
   activation?: Function
 }
@@ -47,6 +49,10 @@ interface GenePart {
   part: Array<OperItem>
 };
 
+interface DataInput {
+  [key: string]: number
+};
+
 export {
   EnvOption,
   GenePartAs,
@@ -57,5 +63,7 @@ export {
   ChromosomeReduceFunc,
   AgentOption,
   AgentChromeLinkFunc,
+  AgentLossFunc,
+  DataInput,
   PopulationOption
 };

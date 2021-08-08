@@ -1,4 +1,4 @@
-import { OperItem, GenePart, OperSets } from '../types'
+import { OperItem, GenePart, OperSets, DataInput } from '../types'
 import ComputeNode from '../modules/compute-node';
 import { getRandomFromArray } from '../utils/helper';
 import Activation from '../modules/activation';
@@ -7,6 +7,7 @@ import Env from './env';
 class Gene {
   headLen: number
   private genes: Array<OperItem>
+  private expressionTree: Array<ComputeNode>
 
   constructor(geneSets?: Array<OperItem>) {
     const { operSets, headLen, maxpLen } = Env.getOptions();
@@ -17,6 +18,8 @@ class Gene {
     } else {
       this.genes = [...geneSets];
     }
+    // 生成表达式树
+    this.expressionTree = Gene.createComputeTree(this.genes);
   }
 
   /**
@@ -39,8 +42,8 @@ class Gene {
    * 获取基因表达式的值
    * @returns 
    */
-  getValue() {
-    const result = Gene.calculate(Gene.createComputeTree(this.genes));
+  getValue(xdata: DataInput) {
+    const result = Gene.calculate(this.expressionTree, xdata);
     return result[0];
   }
 
@@ -93,14 +96,14 @@ class Gene {
    * 计算基因表达式的值
    * @param geneObj 基因对象
    */
-  static calculate(expressNodes: Array<ComputeNode>) {
+  static calculate(expressNodes: Array<ComputeNode>, xdata: DataInput) {
     const result: Array<number> = [];
     expressNodes.forEach(node => {
       if (!node.params.length) {
-        result.push(node.func());
+        result.push(xdata[node.name] ? xdata[node.name] : node.func());
         return;
       }
-      result.push(node.func(...Gene.calculate(node.params)));
+      result.push(node.func(...Gene.calculate(node.params, xdata)));
     });
     return result;
   }
