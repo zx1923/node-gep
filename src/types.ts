@@ -14,7 +14,7 @@ interface ChromosomeOption {
 }
 
 interface AgentOption {
-  chromesomeOption: ChromosomeOption
+  chromesome: ChromosomeOption
   chromosomeLen?: number
   lossFunc?: typeof AgentLossFunc
   linkFunc?: typeof AgentChromeLinkFunc
@@ -35,7 +35,7 @@ interface EnvOption  {
   operSets: OperSets
   maxpLen: number         // 函数符的最大参数个数
   headLen: number         // 头部长度
-  mutantRate: number      // 突变概率
+  mutatRate: number      // 突变概率
   inheritCount: number    // 精英数量
   mixinRate: number       // 混入新个体占比
   reviseRate: number      // 自动调整比率
