@@ -19,6 +19,13 @@ class Gene {
       this.genes = [...geneSets];
     }
     // 生成表达式树
+    this.updateComputeTree();
+  }
+
+  /**
+   * 更新计算树
+   */
+  updateComputeTree() {
     this.expressionTree = Gene.createComputeTree(this.genes);
   }
 
