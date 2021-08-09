@@ -5,13 +5,15 @@ import Activation from '../modules/activation';
 import Env from './env';
 
 class Gene {
-  headLen: number
+  private headLen: number
   private genes: Array<OperItem>
   private expressionTree: Array<ComputeNode>
+  private operSets: OperSets
 
   constructor(geneSets?: Array<OperItem>) {
     const { operSets, headLen, maxpLen } = Env.getOptions();
     this.headLen = headLen;
+    this.operSets = operSets;
     
     if (geneSets == undefined || !Array.isArray(geneSets) || !geneSets.length) {
       this.genes = Gene.createGenesArray(headLen, maxpLen, operSets);
@@ -63,6 +65,18 @@ class Gene {
       chars.push(el.name);
     });
     return chars;
+  }
+
+  /**
+   * 变异
+   */
+  mutate() {
+    const headsSets = [...this.operSets.funcs, ...this.operSets.vars];
+    const rate = Env.getOptions().mutatRate;
+    while(Math.random() <= rate) {
+      const idx = Math.floor(Math.random() * this.headLen);
+      this.genes[idx] = getRandomFromArray(headsSets, 1)[0];
+    };
   }
 
   /**
