@@ -1,6 +1,6 @@
 import Chromosome from './chromosome';
 import Loss from '../modules/loss';
-import { AgentOption, ChromosomeOption, AgentChromeLinkFunc, AgentLossFunc, DataInput } from '../types';
+import { AgentOption, ChromosomeOption, AgentChromeLinkFunc, AgentLossFunc, DataInput, ChromoGeneParts } from '../types';
 import Link from '../modules/link';
 
 interface ChromoValueResult {
@@ -30,8 +30,16 @@ class Agent {
     }
   }
 
+  /**
+   * 获取全部染色体
+   * @returns 
+   */
   getChromosomes() {
-    return this.chromosomeList[0].chromo;
+    const chromos: Chromosome[] = [];
+    this.chromosomeList.forEach(el => {
+      chromos.push(el.chromo);
+    });
+    return chromos;
   }
 
   /**
@@ -60,6 +68,18 @@ class Agent {
    */
   getChromoValue(xdata: DataInput) {
     return Agent.chromosomeGetValue(this.chromosomeList, xdata);
+  }
+
+  /**
+   * 从染色体中获取随机基因片段
+   * @returns 
+   */
+  getRandomParts() {
+    const parts: ChromoGeneParts[] = [];
+    this.chromosomeList.forEach(el => {
+      parts.push(el.chromo.getRandomParts());
+    });
+    return parts;
   }
 
   /**
