@@ -18,15 +18,18 @@ class Agent {
   chromoLinkFunc: typeof AgentChromeLinkFunc // TODO: 连接函数，保留
   chromoLossFunc: typeof AgentLossFunc
 
-  constructor(options: AgentOption) {
-    const { chromosomeLen = 1, chromesomeOption, linkFunc, lossFunc } = options;
+  constructor(options: AgentOption, chromoSets?: Chromosome[]) {
+    const { chromosomeLen = 1, chromesome, linkFunc, lossFunc } = options;
     this.chromoLinkFunc = linkFunc || Link.addUp;
     this.chromoLossFunc = lossFunc || Loss.absolute;
 
-    if (chromosomeLen) {
-      this.chromosomeList = Agent.createChromosomes(chromosomeLen, chromesomeOption);
-    } else {
+    if (chromoSets !== undefined && Array.isArray(chromoSets) && chromoSets.length) {
       this.chromosomeList = [];
+      chromoSets.forEach(el => {
+        this.chromosomeList.push({ chromo: el, lossValue: -1 });
+      });
+    } else {
+      this.chromosomeList = Agent.createChromosomes(chromosomeLen, chromesome);
     }
   }
 
