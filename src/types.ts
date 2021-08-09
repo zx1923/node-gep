@@ -42,8 +42,13 @@ interface EnvOption  {
 };
 
 interface GenePart {
-  range: Array<number>
+  range: [number, number]
   part: Array<OperItem>
+};
+
+interface GenePartItem {
+  position: [number, number],
+  genePart: GenePart
 };
 
 interface DataInput {
@@ -58,10 +63,14 @@ interface PopulationOption {
   stopLoss?: number
 };
 
+declare type ChromoGeneParts = GenePartItem[];
+
 export {
   EnvOption,
   GenePartAs,
   GenePart,
+  GenePartItem,
+  ChromoGeneParts,
   OperItem,
   OperSets,
   ChromosomeOption,
