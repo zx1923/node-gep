@@ -1,19 +1,14 @@
 
-enum GenePartAs {
-  Father = 'father',
-  Mother = 'mother'
-};
-
-declare function ChromosomeReduceFunc(row: number, col:number);
-declare function AgentChromeLinkFunc(prev, curt);
-declare function AgentLossFunc(out: number | number[], target: number | number[]);
-interface ChromosomeOption {
+export declare function ChromosomeReduceFunc(row: number, col:number);
+export declare function AgentChromeLinkFunc(prev, curt);
+export declare function AgentLossFunc(out: number | number[], target: number | number[]);
+export interface ChromosomeOption {
   shape: [number, number]               // 基因形
   linkFunc?: typeof ChromosomeReduceFunc // 基因连接函数
   activation?: Function
 }
 
-interface AgentOption {
+export interface AgentOption {
   chromesome: ChromosomeOption
   chromosomeLen?: number
   lossFunc?: typeof AgentLossFunc
@@ -21,17 +16,17 @@ interface AgentOption {
   activation?: Function
 }
 
-interface OperItem {
+export interface OperItem {
   func: Function
   name: string
 };
 
-interface OperSets {
+export interface OperSets {
   funcs: Array<OperItem>  // 函数符集合
   vars: Array<OperItem>   // 终止符集合
 }
 
-interface EnvOption  { 
+export interface EnvOption  { 
   operSets: OperSets
   maxpLen?: number         // 函数符的最大参数个数
   headLen: number         // 头部长度
@@ -42,21 +37,21 @@ interface EnvOption  {
   reviseRate: number      // 自动调整比率
 };
 
-interface GenePart {
+export interface GenePart {
   range: [number, number]
   part: Array<OperItem>
 };
 
-interface GenePartItem {
+export interface GenePartItem {
   position: [number, number],
   genePart: GenePart
 };
 
-interface DataInput {
+export interface DataInput {
   [key: string]: number
 };
 
-interface PopulationOption {
+export interface PopulationOption {
   agent: AgentOption
   total: number
   topn: number
@@ -64,30 +59,10 @@ interface PopulationOption {
   stopLoss?: number
 };
 
-declare type ChromoGeneParts = GenePartItem[];
-
-interface EncodeGenes {
+export type ChromoGeneParts = GenePartItem[];
+export interface EncodeGenes {
   shape: [number, number]
   genes: string[][]
 };
 
-declare type ChromoEncodeGenes = EncodeGenes[];
-
-export {
-  EnvOption,
-  GenePartAs,
-  GenePart,
-  GenePartItem,
-  ChromoGeneParts,
-  OperItem,
-  OperSets,
-  ChromosomeOption,
-  ChromosomeReduceFunc,
-  AgentOption,
-  AgentChromeLinkFunc,
-  AgentLossFunc,
-  DataInput,
-  EncodeGenes,
-  ChromoEncodeGenes,
-  PopulationOption
-};
+export type ChromoEncodeGenes = EncodeGenes[];

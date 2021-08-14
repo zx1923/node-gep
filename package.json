@@ -44,6 +44,7 @@
     "webpack-cli": "^4.7.2"
   },
   "dependencies": {
-    "ckr": "^1.0.0"
+    "ckr": "^1.0.0",
+    "gep": "^1.0.0"
   }
 }
