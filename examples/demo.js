@@ -1,4 +1,4 @@
-const { Operator, DataIO, Env, Loss, Link, Activation, Population } = require('../dist/lib/gepjs');
+const { Operator, DataIO, Env, Loss, Link, Activation, Population } = require('gep');
 
 const operators = new Operator();
 operators.setVars('x');
