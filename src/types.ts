@@ -68,7 +68,7 @@ declare type ChromoGeneParts = GenePartItem[];
 
 interface EncodeGenes {
   shape: [number, number]
-  genes: string[]
+  genes: string[][]
 };
 
 declare type ChromoEncodeGenes = EncodeGenes[];
