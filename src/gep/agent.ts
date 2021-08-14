@@ -1,6 +1,6 @@
 import Chromosome from './chromosome';
 import Loss from '../modules/loss';
-import { AgentOption, ChromosomeOption, AgentChromeLinkFunc, AgentLossFunc, DataInput, ChromoGeneParts } from '../types';
+import { AgentOption, ChromosomeOption, AgentChromeLinkFunc, AgentLossFunc, DataInput, ChromoGeneParts, ChromoEncodeGenes } from '../types';
 import Link from '../modules/link';
 
 interface ChromoValueResult {
@@ -14,7 +14,7 @@ interface ChromoItem {
 };
 
 class Agent {
-  private chromosomeList: ChromoItem[]
+  chromosomeList: ChromoItem[]
   chromoLinkFunc: typeof AgentChromeLinkFunc // TODO: 连接函数，保留
   chromoLossFunc: typeof AgentLossFunc
 
@@ -46,19 +46,37 @@ class Agent {
   }
 
   /**
+   * 获取序列化编码后的染色体
+   */
+  getEncodeChromosomes() {
+    const encodeChromos: ChromoEncodeGenes = [];
+    this.chromosomeList.forEach(el => {
+      encodeChromos.push(el.chromo.getEncodeGenes());
+    });
+    return encodeChromos;
+  }
+
+  /**
    * 计算适应度
    */
   getFitness(xdata: Array<DataInput>, ydata: Array<number>) {
     this.calculateFitness(xdata, ydata);
-    return this.chromosomeList[0].lossValue;
+    const [ best ] = this.chromosomeList;
+    return best.lossValue;
   }
 
+  /**
+   * 计算适应度
+   * @param xdata 输入值
+   * @param ydata 输出值
+   */
   calculateFitness(xdata: Array<DataInput>, ydata: Array<number>) {
     if (!xdata.length || xdata.length !== ydata.length) {
       throw new Error(`The input data is invalid`);
     }
     // TODO: 对染色体的适应度重新进行整理计算
     this.chromosomeList.forEach(item => {
+      // console.log('=====>', item);
       const reduceResArray = item.chromo.getReduceValue(xdata);
       item.lossValue = this.chromoLossFunc(reduceResArray, ydata);
     });
