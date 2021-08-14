@@ -5,10 +5,21 @@ class Env {
   static envOptions: EnvOption
 
   static setOptions(opts: EnvOption) {
-    if (!opts.headLen || !opts.maxpLen) {
+    if (!opts.headLen || !opts.operSets) {
       throw new Error(`Gene constructor params is invalid`);
     }
-    Env.envOptions = opts;
+    let maxpLen = 0;
+    for (let name in opts.operSets.funcs) {
+      const fn = opts.operSets.funcs[name];
+      if (maxpLen <= fn.func.length) {
+        maxpLen = fn.func.length;
+      }
+    }
+    Env.envOptions = {
+      ...opts,
+      maxpLen,
+      geneLen: opts.headLen + opts.headLen * (opts.maxpLen - 1) + 1,
+    };
   }
 
   static getOptions() {

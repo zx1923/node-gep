@@ -33,8 +33,9 @@ interface OperSets {
 
 interface EnvOption  { 
   operSets: OperSets
-  maxpLen: number         // 函数符的最大参数个数
+  maxpLen?: number         // 函数符的最大参数个数
   headLen: number         // 头部长度
+  geneLen?: number         // 基因长度，计算得出
   mutatRate: number      // 突变概率
   inheritCount: number    // 精英数量
   mixinRate: number       // 混入新个体占比
@@ -57,13 +58,20 @@ interface DataInput {
 
 interface PopulationOption {
   agent: AgentOption
-  count: number
+  total: number
   topn: number
   iteration?: number
   stopLoss?: number
 };
 
 declare type ChromoGeneParts = GenePartItem[];
+
+interface EncodeGenes {
+  shape: [number, number]
+  genes: string[]
+};
+
+declare type ChromoEncodeGenes = EncodeGenes[];
 
 export {
   EnvOption,
@@ -79,5 +87,7 @@ export {
   AgentChromeLinkFunc,
   AgentLossFunc,
   DataInput,
+  EncodeGenes,
+  ChromoEncodeGenes,
   PopulationOption
 };
