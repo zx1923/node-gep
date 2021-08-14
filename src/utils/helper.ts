@@ -98,6 +98,43 @@ function getRandomFromArray(arr: Array<any>, count = 1) {
   return result;
 }
 
+/**
+ * 在给定长度内获取一个随机片段
+ * @param len 长度
+ * @param countArray 数量的维度数组
+ * @returns 
+ */
+function getRandomRange(len: number, countArray: number[]) {
+  const res = [];
+  countArray.forEach(el => {
+    const ranges = [];
+    for (let i = 0; i < el; i++) {
+      const r1 = Math.floor(Math.random() * len);
+      const r2 = Math.floor(Math.random() * len);
+      ranges.push([r1, r2].sort((a, b) => a - b));
+    }
+    res.push(ranges);
+  });
+  return res;
+}
+
+/**
+ * 从给定位置开始替换数据的值
+ * @param arr 原数组
+ * @param start 开始位置
+ * @param part 替换值
+ * @returns 
+ */
+function replaceArrayPart(arr: any[], start: number, part: any[]) {
+  const res = [...arr];
+  res.forEach((el, idx) => {
+    if (idx >= start && idx < start + part.length) {
+      res[idx] = part[idx - start];
+    }
+  });
+  return res;
+}
+
 export {
   getTypeOf,
   isObject,
@@ -108,4 +145,6 @@ export {
   isString,
   isNumber,
   getRandomFromArray,
+  getRandomRange,
+  replaceArrayPart,
 };
