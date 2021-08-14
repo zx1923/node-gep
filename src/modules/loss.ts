@@ -12,6 +12,11 @@ class Loss {
     }
     throw new Error(`Params 'out' or 'target' is invalid`);
   }
+
+  static absoluteAvg(out: number | number[], target: number | number[]) {
+    const sum = Loss.absolute(out, target);
+    return Array.isArray(out) ? sum / out.length : sum;
+  }
 };
 
 export default Loss;
