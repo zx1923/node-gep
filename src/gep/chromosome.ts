@@ -32,7 +32,7 @@ class Chromosome {
   getEncodeGenes(): EncodeGenes {
     let encodeGenes = [];
     const func = (row, col) => {
-      encodeGenes = encodeGenes.concat(this.genesMap[row][col].encode());
+      encodeGenes.push(this.genesMap[row][col].encode());
     };
     Chromosome.reduce(this.shape, func);
     return { shape: this.shape, genes: encodeGenes};
@@ -123,6 +123,23 @@ class Chromosome {
     });
     // TODO: 基因 2d 转 gene 对象 2d
     return geneMapCopy;
+  }
+
+  /**
+   * 将序列化的基因数组转为基因对象
+   * @param encodeGenes 被序列化后的基因
+   * @returns 
+   */
+  static transEncodeGeneToGeneSets(encodeGenes: EncodeGenes) {
+    const [ w, _ ] = encodeGenes.shape;
+    const func = (row, col) => {
+      const resGene = new Gene();
+      resGene.decode(encodeGenes.genes[w * row + col]);
+      resGene.mutate();
+      resGene.updateComputeTree();
+      return resGene;
+    };
+    return Chromosome.reduce(encodeGenes.shape, func);
   }
 
   /**
