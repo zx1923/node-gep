@@ -9,6 +9,7 @@ class Chromosome {
   shape: [number, number]
   linkFunc: typeof ChromosomeReduceFunc   // TODO: 连接函数，保留
   private lastShapeValue: Array<number>[]
+  private lastReduceValue: number
   private activeFunc: Function
 
   constructor(option: ChromosomeOption, chromoGeneSets: Gene[][] = []) {
@@ -18,6 +19,7 @@ class Chromosome {
     this.activeFunc = activation || Activation.none;
 
     this.lastShapeValue = [];
+    this.lastReduceValue = 0;
     if (!chromoGeneSets || !isArray(chromoGeneSets) || !chromoGeneSets.length) {
       this.genesMap = Chromosome.createGenesUseShape(this.shape);
     } else {
@@ -60,6 +62,7 @@ class Chromosome {
         return this.activeFunc(val);
       };
       this.lastShapeValue = Chromosome.reduce(this.shape, func);
+      this.lastReduceValue = sum;
       result.push(this.activeFunc(sum));
     });
     return result;

@@ -1,4 +1,7 @@
 class Link {
+  static none(...args) {
+    return args;
+  }
   static addUp(...args: number[]) {
     if (args.length <= 1) {
       return args[0];

@@ -33,6 +33,14 @@ class Population {
   }
 
   /**
+   * 获取表现最后的len个个体
+   * @param len 长度
+   */
+  getTop(len: number = 1) {
+    return this.agents.slice(0, len);
+  }
+
+  /**
    * 对每一个个体进行生存考验
    * @param xdata 输入值
    * @param ydata 输出值
