@@ -1,6 +1,6 @@
 import Gene from './gene';
 import { isArray, } from '../utils/helper';
-import { ChromosomeOption, OperItem, ChromosomeReduceFunc, DataInput, ChromoGeneParts, GenePartItem } from '../types';
+import { ChromosomeOption, OperItem, ChromosomeReduceFunc, DataInput, ChromoGeneParts, GenePartItem, EncodeGenes } from '../types';
 import Activation from '../modules/activation';
 import Link from '../modules/link';
 
@@ -29,11 +29,13 @@ class Chromosome {
    * 获取染色体基因组编码结果
    * @returns 
    */
-  getEncodeGenes(): Array<OperItem>[] {
+  getEncodeGenes(): EncodeGenes {
+    let encodeGenes = [];
     const func = (row, col) => {
-      return this.genesMap[row][col].encode();
+      encodeGenes = encodeGenes.concat(this.genesMap[row][col].encode());
     };
-    return Chromosome.reduce(this.shape, func);
+    Chromosome.reduce(this.shape, func);
+    return { shape: this.shape, genes: encodeGenes};
   }
 
   /**
@@ -135,7 +137,7 @@ class Chromosome {
     for (let i = 0; i < h; i++) {
       const row = [];
       for (let n = 0; n < w; n++) {
-        row.push(fn(n, i));
+        row.push(fn(i, n));
       }
       res.push(row);
     }
