@@ -1,38 +1,57 @@
 import Operator from "./modules/operator";
 import Env from "./gep/env";
 import Activation from "./modules/activation";
-import Chromosome from './gep/chromosome';
-import Gene from './gep/gene';
-import { OperItem, ChromosomeOption, AgentOption } from "./types";
-import Agent from './gep/agent';
+import { ChromosomeOption, PopulationOption } from "./types";
+import DataIO from "./modules/dataio";
+import Population from "./gep/population";
+import Loss from "./modules/loss";
 
 const operators = new Operator();
-operators.setVars('1', 1);
-operators.setVars('2', 2);
+operators.setVars('x');
 const operSets = operators.toArray();
 
 const envOpts = {
   operSets,
-  headLen: 6,
-  maxpLen: 4,
+  headLen: 4,
   inheritCount: 1,  // 直接进入下一轮个体数量
-  mutantRate: 0.1,  // 突变率
-  mixinRate: 0.1,   // 新个体的混入占比
+  mutatRate: 0.2,  // 突变率
+  mixinRate: 0.3,   // 新个体的混入占比
   reviseRate: 0.01, // 修正率，自动调整突变率和个体混入占比
 };
 
+const dataio = new DataIO();
+function demo(params: number) {
+  return Math.sign(params) + Math.cos(params / 2) + Math.sqrt(params);
+}
+
+for (let i = 0; i < 100; i++) {
+  dataio.add({ x: i }, demo(i));
+}
+
+const { x: xdata, y: ydata } = dataio.export();
+
 Env.setOptions(envOpts);
 
-const chromoOpts: ChromosomeOption = {
-  shape: [10, 10],
-  activation: Activation.none
-};
-
-const agent = new Agent({
-  chromosomeLen: 1,
-  chromesomeOption: chromoOpts
-});
+const popset: PopulationOption = {
+  agent: {
+    chromosomeLen: 1,
+    lossFunc: Loss.absolute,
+    chromesome: {
+      shape: [1, 3],
+      activation: Activation.none,
+    }
+  },
+  total: 300,
+  topn: 1
+}
 
 const start = Date.now();
-console.log(agent.getChromoValue());
+const myPop = new Population(popset);
+for (let i = 0; i < 1000; i++) {
+  myPop.alive(xdata, ydata);
+  if (i % 50 === 0) {
+    console.log(`${i}:`, myPop.agents[0].loss, myPop.agents[0].agent.getEncodeChromosomes()[0].genes.join(','));
+  }
+  myPop.encodeHybridize();
+}
 console.log(Date.now() - start, 'ms');
