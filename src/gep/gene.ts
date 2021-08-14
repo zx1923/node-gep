@@ -68,6 +68,24 @@ class Gene {
   }
 
   /**
+   * 将基因符号转换为对象
+   * @param geneStrArray 基因符号数组
+   */
+  decode(geneStrArray: string[]) {
+    const { operSets, headLen, maxpLen, geneLen } = Env.getOptions();
+    this.genes = [];
+    geneStrArray.forEach(el => {
+      this.genes.push(operSets[el]);
+    });
+    // 如果长度不够，则补充剩余的终止符
+    if (this.genes.length < geneLen) {
+      const ch = geneLen - this.genes.length;
+      this.genes = this.genes.concat(getRandomFromArray(operSets.vars, ch));
+    }
+    this.updateComputeTree();
+  }
+
+  /**
    * 变异
    */
   mutate() {
@@ -158,7 +176,7 @@ class Gene {
    * @param ends 终止符
    */
   static createGenesArray(headLen: number, maxpLen: number, operSets: OperSets): Array<OperItem> {
-    const endLen = headLen * (maxpLen * 1) + 1;
+    const endLen = headLen * (maxpLen - 1) + 1;
     const headsSets = [...operSets.funcs, ...operSets.vars];
     let genesArray: Array<OperItem> = [];
     genesArray = genesArray.concat(getRandomFromArray(headsSets, headLen));
