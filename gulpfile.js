@@ -1,15 +1,13 @@
 const gulp = require('gulp');
 const uglyjs = require('gulp-uglify');
-const clean = require('gulp-clean');
+const rename = require('gulp-rename');
+const del = require('del');
 const ts = require("gulp-typescript");
 const tsProject = ts.createProject("tsconfig.json");
-const fs = require('fs');
+const { spawnSync } = require('child_process');
 
-gulp.task('clean:node', async () => {
-  const { src } = gulp;
-  if (fs.existsSync('dist/build')) {
-    await src('dist/build').pipe(clean());
-  }
+gulp.task('clean:dist', async () => {
+  await del(['dist']);
 });
 
 gulp.task('build:ts', async () => {
@@ -20,9 +18,10 @@ gulp.task('build:ts', async () => {
     .pipe(dest("dist/build"));
 });
 
-gulp.task('build:config', async () => {
+gulp.task('build:lib', async () => {
   const { src, dest } = gulp;
-  await src('package.json').pipe(dest('dist/build'));
+  await spawnSync('npm', ['run', 'lib'], { shell: true });
+  await src('./package.publish.json').pipe(rename('package.json')).pipe(dest('dist'));
 });
 
 gulp.task('dev:build', async () => {
@@ -34,4 +33,4 @@ gulp.task('dev:build', async () => {
 
 gulp.task('dev', gulp.series('dev:build'));
 
-gulp.task('default', gulp.series('build:ts', 'build:config'));
+gulp.task('default', gulp.series('clean:dist', 'build:lib'));
