@@ -3,6 +3,7 @@ import { EnvOption } from '../types';
 class Env {
   
   static envOptions: EnvOption
+  static OperMaps: object
 
   static setOptions(opts: EnvOption) {
     if (!opts.headLen || !opts.operSets) {
@@ -20,6 +21,12 @@ class Env {
       maxpLen,
       geneLen: opts.headLen + opts.headLen * (opts.maxpLen - 1) + 1,
     };
+
+    // oper map
+    Env.OperMaps = {};
+    [ ...opts.operSets.funcs, ...opts.operSets.vars ].forEach(el => {
+      Env.OperMaps[el.name] = el;
+    });
   }
 
   static getOptions() {
