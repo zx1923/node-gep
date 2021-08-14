@@ -14,6 +14,9 @@ const BuildInFuncs: object = {
   '/': (a: number, b: number) => {
     return a / b;
   },
+  '*2': (a: number) => {
+    return a * a;
+  },
   sqrt: (a: number) => {
     return Math.sqrt(a);
   },
