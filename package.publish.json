@@ -1,8 +1,8 @@
 {
-  "name": "gep",
+  "name": "gepjs",
   "version": "1.0.0",
   "description": "A GEP algorithm framework developed using nodejs",
-  "main": "lib/gep.js",
+  "main": "lib/gep.min.js",
   "typings": "types/index.d.ts",
   "repository": {
     "type": "git",

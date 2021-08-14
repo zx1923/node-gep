@@ -16,7 +16,7 @@ const buildOutPath = path.resolve(__dirname, `dist/lib`);
 module.exports = {
   entry: './src/index.ts',
   output: {
-    filename: 'gep.js',
+    filename: 'gep.min.js',
     path: buildOutPath,
     libraryTarget: 'umd',
     globalObject: 'this',

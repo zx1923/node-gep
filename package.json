@@ -1,5 +1,5 @@
 {
-  "name": "gep",
+  "name": "gepjs",
   "version": "1.0.0",
   "description": "A GEP algorithm framework developed using nodejs",
   "main": "index.js",
@@ -45,6 +45,6 @@
   },
   "dependencies": {
     "ckr": "^1.0.0",
-    "gep": "^1.0.0"
+    "gepjs": "^1.0.0"
   }
 }
