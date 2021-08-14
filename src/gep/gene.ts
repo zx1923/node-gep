@@ -72,17 +72,16 @@ class Gene {
    * @param geneStrArray 基因符号数组
    */
   decode(geneStrArray: string[]) {
-    const { operSets, headLen, maxpLen, geneLen } = Env.getOptions();
+    const { operSets, geneLen } = Env.getOptions();
     this.genes = [];
     geneStrArray.forEach(el => {
-      this.genes.push(operSets[el]);
+      this.genes.push(Env.OperMaps[el]);
     });
     // 如果长度不够，则补充剩余的终止符
     if (this.genes.length < geneLen) {
       const ch = geneLen - this.genes.length;
       this.genes = this.genes.concat(getRandomFromArray(operSets.vars, ch));
     }
-    this.updateComputeTree();
   }
 
   /**
