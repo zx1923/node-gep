@@ -4,15 +4,14 @@
   "description": "A GEP algorithm framework developed using nodejs",
   "main": "index.js",
   "scripts": {
-    "clean:node": "gulp clean:node",
-    "build:node": "webpack --config webpack.config.js --mode production --target node",
-    "build:node-dev": "webpack --config webpack.config.js --mode development --target node",
-    "build:brow": "webpack --config webpack.config.js --mode production",
-    "build:brow-dev": "webpack --config webpack.config.js --mode development",
+    "clean:dist": "gulp clean:dist",
+    "lib": "webpack --config webpack.config.js --mode production",
+    "build:lib": "gulp build:lib",
     "demo:brow": "webpack --config webpack.demo.js --mode development",
     "test": "gulp dev && jest tests/ --coverage",
-    "demo": "gulp dev && node ./dist/build/demo.js"
+    "demo": "node ./examples/demo.js"
   },
+  "typings": "dist/types/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zx1923/node-gep.git"
@@ -31,8 +30,9 @@
     "@types/node": "^16.0.0",
     "@types/webpack": "^5.28.0",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
+    "del": "^6.0.0",
     "gulp": "^4.0.2",
-    "gulp-clean": "^0.4.0",
+    "gulp-rename": "^2.0.0",
     "gulp-typescript": "^6.0.0-alpha.1",
     "gulp-uglify": "^3.0.2",
     "html-webpack-plugin": "^5.3.2",

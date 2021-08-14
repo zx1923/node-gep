@@ -1,0 +1,24 @@
+{
+  "name": "gep",
+  "version": "1.0.0",
+  "description": "A GEP algorithm framework developed using nodejs",
+  "main": "lib/gep.js",
+  "typings": "types/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zx1923/node-gep.git"
+  },
+  "keywords": [
+    "GEP"
+  ],
+  "author": "Sean",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zx1923/node-gep/issues"
+  },
+  "homepage": "https://github.com/zx1923/node-gep#readme",
+  "files": [
+    "types",
+    "lib"
+  ]
+}

@@ -7,7 +7,6 @@
     "declaration": true,
     "outDir": "./dist/node",
     "declarationDir": "./dist/types/",
-    "strict": true,
     "lib": [
       "esnext"
     ]

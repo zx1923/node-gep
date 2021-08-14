@@ -11,16 +11,15 @@ function getArgValue(key) {
   return null;
 }
 
-const buildTarget = getArgValue('--target') || 'web';
-const buildOutPath = path.resolve(__dirname, `dist/${buildTarget}`);
+const buildOutPath = path.resolve(__dirname, `dist/lib`);
 
 module.exports = {
-  target: buildTarget,
   entry: './src/index.ts',
   output: {
-    filename: 'jschecker.js',
+    filename: 'gep.js',
     path: buildOutPath,
     libraryTarget: 'umd',
+    globalObject: 'this',
     library: "gep",
   },
   module: {
