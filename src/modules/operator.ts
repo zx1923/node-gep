@@ -24,9 +24,6 @@ const BuildInFuncs: object = {
     return Math.log(a);
   },
   pow: (a: number, b: number) => {
-    if (a < 0 && b < 1) {
-      return 0;
-    }
     return Math.pow(a, b);
   },
   sin: (a: number) => {
