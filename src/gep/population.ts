@@ -10,6 +10,8 @@ interface AgentItem {
   prob: number
 };
 
+const MaxMutateRate = 0.5;
+
 class Population {
   agents: AgentItem[]
   private agentOption: AgentOption
@@ -17,6 +19,9 @@ class Population {
   private stopLoss: number
   private topn: number
   private total: number
+  private lastLoss: number
+  private startMutateRate: number
+  epochs: number
 
   constructor(option: PopulationOption) {
     const { iteration = 1, stopLoss = 0.001, agent, total = 100, topn = 0.5 } = option;
@@ -25,6 +30,9 @@ class Population {
     this.agentOption = agent
     this.topn = topn;
     this.total = total;
+    this.lastLoss = 0;
+    this.epochs = 0;
+    this.startMutateRate = Number(Env.get('mutateRate'));
     this.agents = Population.createAgents(total, this.agentOption);
   }
 
@@ -71,21 +79,35 @@ class Population {
       this.agents.push(Population.createAgentItem(new Agent(this.agentOption)));
     }
     // 保留精英
-    const [ best ] = oldAgents;
+    const [best] = oldAgents;
     this.agents.push(Population.createAgentItem(best.agent));
+    
+    // 修正突变率
+    const mutateRate = Number(Env.get('mutateRate'));
+    if (this.lastLoss === best.loss && mutateRate < MaxMutateRate) {
+      this.epochs % 100 === 0 && Env.set('mutateRate', mutateRate * (1 + mutateRate / 100));
+    }
+    // 突变率归零条件
+    if (this.lastLoss !== best.loss) {
+      Env.set('mutateRate', this.startMutateRate);
+    }
+
     for (let i = newAgentCount - 1; i < this.total; i++) {
       // 随机取出父本的一段基因片段，与母本基因结合，生成新个体
-      const [ father ] = Population.getRandomAgent(oldAgents, 1);
+      const [father] = Population.getRandomAgent(oldAgents, 1);
       const fParts = father.agent.getRandomParts();
       const fChild = this.createMixinAgent(fParts, best.agent.getChromosomes());
       this.agents.push(Population.createAgentItem(fChild));
     }
+
+    this.lastLoss = best.loss;
+    this.epochs += 1;
   }
 
   /**
    * 使用序列码的方式进行杂交
    */
-  encodeHybridize() {
+  corssover() {
     const oldAgents = [...this.agents];
     this.agents = [];
     const { mixinRate } = Env.getOptions();
@@ -94,11 +116,22 @@ class Population {
       this.agents.push(Population.createAgentItem(new Agent(this.agentOption)));
     }
     // 保留精英
-    const [ best ] = oldAgents;
+    const [best] = oldAgents;
     this.agents.push(Population.createAgentItem(best.agent));
+
+    // 修正突变率
+    const mutateRate = Number(Env.get('mutateRate'));
+    if (this.lastLoss === best.loss && mutateRate < MaxMutateRate) {
+      this.epochs % 100 === 0 && Env.set('mutateRate', mutateRate * (1 + mutateRate / 100));
+    }
+    // 突变率归零条件
+    if (this.lastLoss !== best.loss) {
+      Env.set('mutateRate', this.startMutateRate);
+    }
+
     // 交叉变异
     for (let i = newAgentCount - 1; i < this.total; i++) {
-      const [ father, mother ] = Population.getRandomAgent(oldAgents, 2);
+      const [father, mother] = Population.getRandomAgent(oldAgents, 2);
       const childChromo = Population.createMixedAgentChromoGenes(father.agent, mother.agent);
       const chromoSets = [];
       childChromo.forEach(encodeGenes => {
@@ -109,6 +142,9 @@ class Population {
       const childAgent = new Agent(this.agentOption, chromoSets);
       this.agents.push(Population.createAgentItem(childAgent));
     }
+
+    this.lastLoss = best.loss;
+    this.epochs += 1;
   }
 
   /**

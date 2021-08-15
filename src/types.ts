@@ -31,7 +31,7 @@ export interface EnvOption  {
   maxpLen?: number         // 函数符的最大参数个数
   headLen: number         // 头部长度
   geneLen?: number         // 基因长度，计算得出
-  mutatRate: number      // 突变概率
+  mutateRate: number      // 突变概率
   inheritCount: number    // 精英数量
   mixinRate: number       // 混入新个体占比
   reviseRate: number      // 自动调整比率

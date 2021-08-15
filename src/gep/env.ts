@@ -34,11 +34,11 @@ class Env {
   }
 
   static set(key: keyof EnvOption, value: any) {
-    Env[key] = value;
+    Env.envOptions[key] = value;
   }
 
   static get(key: keyof EnvOption) {
-    return Env[key];
+    return Env.envOptions[key];
   }
 };
 

@@ -8,14 +8,14 @@ const envOpts = {
   operSets,
   headLen: 5,
   inheritCount: 1,  // 直接进入下一轮个体数量
-  mutatRate: 0.3,  // 突变率
+  mutateRate: 0.3,  // 突变率
   mixinRate: 0.3,   // 新个体的混入占比
-  reviseRate: 0.01, // 修正率，自动调整突变率和个体混入占比
+  reviseRate: 0.001, // 修正率，自动调整突变率和个体混入占比
 };
 
 const dataio = new DataIO();
 function demo(params) {
-  return Math.sign(params) + Math.cos(params / 2) + Math.sqrt(params) + Math.random();
+  return Math.cos(params * 2) + Math.sqrt(params / 3) - Math.sin(params) + Math.random();
 }
 
 for (let i = 0; i < 100; i++) {
@@ -47,8 +47,8 @@ for (let i = 0; i < 2000; i++) {
   myPop.alive(xdata, ydata);
   if (i % 100 === 0) {
     const [ best ] = myPop.getTop();
-    console.log(`${i}:`, myPop.agents[0].loss, best.agent.getEncodeChromosomes()[0].genes.join(','));
+    console.log(`${i}:`, Env.get('mutateRate'), best.loss, best.agent.getEncodeChromosomes()[0].genes.join(','));
   }
-  myPop.encodeHybridize();
+  myPop.corssover();
 }
 console.log(Date.now() - start, 'ms');

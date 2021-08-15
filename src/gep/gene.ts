@@ -89,8 +89,8 @@ class Gene {
    */
   mutate() {
     const headsSets = [...this.operSets.funcs, ...this.operSets.vars];
-    const rate = Env.getOptions().mutatRate;
-    while(Math.random() <= rate) {
+    const rate = Env.get('mutateRate');
+    while (Math.random() <= rate) {
       const idx = Math.floor(Math.random() * this.headLen);
       this.genes[idx] = getRandomFromArray(headsSets, 1)[0];
     };
