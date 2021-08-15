@@ -81,7 +81,7 @@ class Population {
     // 保留精英
     const [best] = oldAgents;
     this.agents.push(Population.createAgentItem(best.agent));
-    
+
     // 修正突变率
     const mutateRate = Number(Env.get('mutateRate'));
     if (this.lastLoss === best.loss && mutateRate < MaxMutateRate) {
@@ -107,7 +107,7 @@ class Population {
   /**
    * 使用序列码的方式进行杂交
    */
-  corssover() {
+  crossover() {
     const oldAgents = [...this.agents];
     this.agents = [];
     const { mixinRate } = Env.getOptions();
