@@ -1,16 +1,14 @@
-const { Operator, DataIO, Env, Loss, Link, Activation, Population } = require('gepjs');
+const { Operator, DataIO, Env, Loss, Link, Activation, Population } = require('../dist/lib/gep.min.js');
 
 const operators = new Operator();
 operators.setVars('x');
 const operSets = operators.toArray();
 
 const envOpts = {
-  operSets,
   headLen: 5,
-  inheritCount: 1,  // 直接进入下一轮个体数量
   mutateRate: 0.3,  // 突变率
   mixinRate: 0.3,   // 新个体的混入占比
-  reviseRate: 0.001, // 修正率，自动调整突变率和个体混入占比
+  reviseRate: 0.00001, // 修正率，自动调整突变率和个体混入占比
 };
 
 const dataio = new DataIO();
@@ -18,13 +16,13 @@ function demo(params) {
   return Math.cos(params * 2) + Math.sqrt(params / 3) - Math.sin(params) + Math.random();
 }
 
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 100; i += 0.5) {
   dataio.add({ x: i }, demo(i));
 }
 
 const { x: xdata, y: ydata } = dataio.export();
 
-Env.setOptions(envOpts);
+Env.setOptions(envOpts, operSets);
 
 const popset = {
   agent: {
@@ -49,6 +47,6 @@ for (let i = 0; i < 2000; i++) {
     const [ best ] = myPop.getTop();
     console.log(`${i}:`, Env.get('mutateRate'), best.loss, best.agent.getEncodeChromosomes()[0].genes.join(','));
   }
-  myPop.corssover();
+  myPop.crossover();
 }
 console.log(Date.now() - start, 'ms');
