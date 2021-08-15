@@ -1,17 +1,19 @@
-import { EnvOption } from '../types';
+import { EnvOption, OperSets } from '../types';
 
 class Env {
   
   static envOptions: EnvOption
-  static OperMaps: object
+  static operMaps: object
+  static operSets: OperSets
 
-  static setOptions(opts: EnvOption) {
-    if (!opts.headLen || !opts.operSets) {
+  static setOptions(opts: EnvOption, opers: OperSets) {
+    if (!opts.headLen) {
       throw new Error(`Gene constructor params is invalid`);
     }
+    Env.operSets = opers;
     let maxpLen = 0;
-    for (let name in opts.operSets.funcs) {
-      const fn = opts.operSets.funcs[name];
+    for (let name in opers.funcs) {
+      const fn = opers.funcs[name];
       if (maxpLen <= fn.func.length) {
         maxpLen = fn.func.length;
       }
@@ -21,12 +23,16 @@ class Env {
       maxpLen,
       geneLen: opts.headLen + opts.headLen * (opts.maxpLen - 1) + 1,
     };
-
+    
     // oper map
-    Env.OperMaps = {};
-    [ ...opts.operSets.funcs, ...opts.operSets.vars ].forEach(el => {
-      Env.OperMaps[el.name] = el;
+    Env.operMaps = {};
+    [ ...opers.funcs, ...opers.vars ].forEach(el => {
+      Env.operMaps[el.name] = el;
     });
+  }
+
+  static getOpers() {
+    return Env.operSets;
   }
 
   static getOptions() {

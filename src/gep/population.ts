@@ -120,9 +120,9 @@ class Population {
     this.agents.push(Population.createAgentItem(best.agent));
 
     // 修正突变率
-    const mutateRate = Number(Env.get('mutateRate'));
+    const mutateRate = Env.get('mutateRate');
     if (this.lastLoss === best.loss && mutateRate < MaxMutateRate) {
-      this.epochs % 100 === 0 && Env.set('mutateRate', mutateRate * (1 + mutateRate / 100));
+      this.epochs % 10 === 0 && Env.set('mutateRate', mutateRate * (1 + mutateRate / 100));
     }
     // 突变率归零条件
     if (this.lastLoss !== best.loss) {

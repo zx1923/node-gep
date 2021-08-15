@@ -26,15 +26,13 @@ export interface OperSets {
   vars: Array<OperItem>   // 终止符集合
 }
 
-export interface EnvOption  { 
-  operSets: OperSets
-  maxpLen?: number         // 函数符的最大参数个数
+export interface EnvOption  {
   headLen: number         // 头部长度
-  geneLen?: number         // 基因长度，计算得出
   mutateRate: number      // 突变概率
-  inheritCount: number    // 精英数量
   mixinRate: number       // 混入新个体占比
   reviseRate: number      // 自动调整比率
+  maxpLen?: number         // 函数符的最大参数个数
+  geneLen?: number         // 基因长度，计算得出
 };
 
 export interface GenePart {

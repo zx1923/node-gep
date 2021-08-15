@@ -11,12 +11,12 @@ class Gene {
   private operSets: OperSets
 
   constructor(geneSets?: Array<OperItem>) {
-    const { operSets, headLen, maxpLen } = Env.getOptions();
+    const { headLen, maxpLen } = Env.getOptions();
     this.headLen = headLen;
-    this.operSets = operSets;
+    this.operSets = Env.operSets;
     
     if (geneSets == undefined || !Array.isArray(geneSets) || !geneSets.length) {
-      this.genes = Gene.createGenesArray(headLen, maxpLen, operSets);
+      this.genes = Gene.createGenesArray(headLen, maxpLen, this.operSets);
     } else {
       this.genes = [...geneSets];
     }
@@ -72,10 +72,11 @@ class Gene {
    * @param geneStrArray 基因符号数组
    */
   decode(geneStrArray: string[]) {
-    const { operSets, geneLen } = Env.getOptions();
+    const { geneLen } = Env.getOptions();
+    const operSets = Env.operSets;
     this.genes = [];
     geneStrArray.forEach(el => {
-      this.genes.push(Env.OperMaps[el]);
+      this.genes.push(Env.operMaps[el]);
     });
     // 如果长度不够，则补充剩余的终止符
     if (this.genes.length < geneLen) {
@@ -89,8 +90,8 @@ class Gene {
    */
   mutate() {
     const headsSets = [...this.operSets.funcs, ...this.operSets.vars];
-    const rate = Env.get('mutateRate');
-    while (Math.random() <= rate) {
+    const mutateRate = Env.get('mutateRate');
+    while (Math.random() <= mutateRate) {
       const idx = Math.floor(Math.random() * this.headLen);
       this.genes[idx] = getRandomFromArray(headsSets, 1)[0];
     };
