@@ -1,6 +1,6 @@
 {
   "name": "gepjs",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A GEP algorithm framework developed using nodejs",
   "main": "index.js",
   "scripts": {
@@ -26,9 +26,12 @@
   },
   "homepage": "https://github.com/zx1923/node-gep#readme",
   "devDependencies": {
+    "@babel/preset-env": "^7.15.0",
+    "@babel/preset-typescript": "^7.15.0",
     "@types/jest": "^26.0.23",
     "@types/node": "^16.0.0",
     "@types/webpack": "^5.28.0",
+    "babel-loader": "^8.2.2",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
     "del": "^6.0.0",
     "gulp": "^4.0.2",
