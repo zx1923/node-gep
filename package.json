@@ -6,7 +6,7 @@
   "scripts": {
     "clean:dist": "gulp clean:dist",
     "lib": "webpack --config webpack.config.js --mode production",
-    "build:lib": "gulp build:lib",
+    "build:lib": "gulp",
     "demo:brow": "webpack --config webpack.demo.js --mode development",
     "test": "gulp dev && jest tests/ --coverage",
     "demo": "node ./examples/demo.js"
