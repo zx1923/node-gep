@@ -21,7 +21,7 @@ gulp.task('build:ts', async () => {
 gulp.task('build:lib', async () => {
   const { src, dest } = gulp;
   await spawnSync('npm', ['run', 'lib'], { shell: true });
-  await src('./package.publish.json').pipe(rename('package.json')).pipe(dest('dist'));
+  await src('package.publish.json').pipe(rename('package.json')).pipe(dest('dist'));
 });
 
 gulp.task('dev:build', async () => {
