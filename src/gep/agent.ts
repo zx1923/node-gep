@@ -59,10 +59,13 @@ class Agent {
   /**
    * 计算适应度
    */
-  getFitness(xdata: Array<DataInput>, ydata: Array<number>) {
+  getFitness(xdata: DataInput[], ydata: number[][]) {
     this.calculateFitness(xdata, ydata);
-    const [ best ] = this.chromosomeList;
-    return best.lossValue;
+    const fitRes: number[] = [];
+    this.chromosomeList.forEach(el => {
+      fitRes.push(el.lossValue);
+    });
+    return fitRes;
   }
 
   /**
@@ -70,17 +73,15 @@ class Agent {
    * @param xdata 输入值
    * @param ydata 输出值
    */
-  calculateFitness(xdata: Array<DataInput>, ydata: Array<number>) {
+  calculateFitness(xdata: DataInput[], ydata: number[][]) {
     if (!xdata.length || xdata.length !== ydata.length) {
       throw new Error(`The input data is invalid`);
     }
-    // TODO: 对染色体的适应度重新进行整理计算
-    this.chromosomeList.forEach(item => {
-      // console.log('=====>', item);
+    // 每条染色体根据其对应通道不同单独计算损失
+    this.chromosomeList.forEach((item, idx) => {
       const reduceResArray = item.chromo.getReduceValue(xdata);
-      item.lossValue = this.chromoLossFunc(reduceResArray, ydata);
+      item.lossValue = this.chromoLossFunc(reduceResArray, ydata, idx);
     });
-    Agent.fitnessSort(this.chromosomeList);
   }
 
   /**

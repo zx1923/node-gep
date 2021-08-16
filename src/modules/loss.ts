@@ -1,21 +1,15 @@
 class Loss {
-  static absolute(out: number | number[], target: number | number[]) {
-    if (!Array.isArray(out) && !Array.isArray(target)) {
-      return Math.abs(out - target);
-    }
-    if (Array.isArray(out) && Array.isArray(target) && out.length <= target.length) {
-      let loss = 0;
-      out.forEach((value, idx) => {
-        loss += Math.abs(value - target[idx]);
-      });
-      return (isNaN(loss) || !isFinite(loss)) ? Number.MAX_SAFE_INTEGER : loss;
-    }
-    throw new Error(`Params 'out' or 'target' is invalid`);
+  static absolute(out: number[], target: number[][], channel: number) {
+    let loss = 0;
+    out.forEach((value, idx) => {
+      loss += Math.abs(value - target[idx][channel]);
+    });
+    return (isNaN(loss) || !isFinite(loss)) ? Number.MAX_SAFE_INTEGER : loss;
   }
 
-  static absoluteAvg(out: number | number[], target: number | number[]) {
-    const sum = Loss.absolute(out, target);
-    return Array.isArray(out) ? sum / out.length : sum;
+  static absoluteAvg(out: number[], target: number[][], channel: number) {
+    const sum = Loss.absolute(out, target, channel);
+    return sum / out.length;
   }
 };
 

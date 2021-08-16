@@ -135,6 +135,17 @@ function replaceArrayPart(arr: any[], start: number, part: any[]) {
   return res;
 }
 
+/**
+ * 数组求和
+ * @param args 被求和值
+ * @returns 
+ */
+function sum(args: number[]) {
+  let val = 0;
+  args.forEach(el => val += el);
+  return val;
+} 
+
 export {
   getTypeOf,
   isObject,
@@ -147,4 +158,5 @@ export {
   getRandomFromArray,
   getRandomRange,
   replaceArrayPart,
+  sum,
 };

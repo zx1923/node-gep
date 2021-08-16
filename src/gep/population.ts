@@ -2,7 +2,7 @@ import Agent from "./agent";
 import Env from "./env";
 import Chromosome from "./chromosome";
 import { PopulationOption, AgentOption, DataInput, ChromoGeneParts, ChromoEncodeGenes } from "../types";
-import { getRandomRange, replaceArrayPart } from "../utils/helper";
+import { getRandomRange, replaceArrayPart, sum } from "../utils/helper";
 
 interface AgentItem {
   agent: Agent
@@ -53,10 +53,10 @@ class Population {
    * @param xdata 输入值
    * @param ydata 输出值
    */
-  alive(xdata: Array<DataInput>, ydata: Array<number>) {
+  alive(xdata: DataInput[], ydata: number[][]) {
     this.agents.forEach((ag, idx) => {
       try {
-        ag.loss = ag.agent.getFitness(xdata, ydata);
+        ag.loss = sum(ag.agent.getFitness(xdata, ydata));
       } catch (err) {
         throw err;
       }
@@ -85,7 +85,7 @@ class Population {
     // 修正突变率
     const mutateRate = Number(Env.get('mutateRate'));
     if (this.lastLoss === best.loss && mutateRate < MaxMutateRate) {
-      this.epochs % 100 === 0 && Env.set('mutateRate', mutateRate * (1 + mutateRate / 100));
+      this.epochs % 10 === 0 && Env.set('mutateRate', mutateRate * (1 + mutateRate / 100));
     }
     // 突变率归零条件
     if (this.lastLoss !== best.loss) {
@@ -179,7 +179,7 @@ class Population {
       const [w, h] = el.shape;
       countArray.push(w * h);
     });
-    const ranges = getRandomRange(Env.getOptions().headLen, countArray);
+    const ranges = getRandomRange(Env.get('headLen'), countArray);
     // 新染色体
     const newChromos: ChromoEncodeGenes = [];
     mEncodeChromos.forEach((el, cidx) => {
@@ -198,6 +198,11 @@ class Population {
     return newChromos;
   }
 
+  /**
+   * 生成初始态对象
+   * @param agent 个体
+   * @returns 
+   */
   static createAgentItem(agent: Agent) {
     return { agent, loss: -1, prob: 0 };
   }
