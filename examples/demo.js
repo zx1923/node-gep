@@ -6,18 +6,18 @@ const operSets = operators.toArray();
 
 const envOpts = {
   headLen: 5,
-  mutateRate: 0.3,  // 突变率
-  mixinRate: 0.3,   // 新个体的混入占比
-  reviseRate: 0.00001, // 修正率，自动调整突变率和个体混入占比
+  mutateRate: 0.3,
+  mixinRate: 0.3,
+  reviseRate: 0.00001,
 };
 
 const dataio = new DataIO();
 function demo(params) {
-  return Math.cos(params * 2) + Math.sqrt(params / 3) - Math.sin(params) + Math.random();
+  return Math.cos(params / 2) + Math.sqrt(params / 3) - Math.sin(params) + Math.random();
 }
 
 for (let i = 0; i < 100; i += 0.5) {
-  dataio.add({ x: i }, demo(i));
+  dataio.add({ x: i }, [demo(i), demo(i)]);
 }
 
 const { x: xdata, y: ydata } = dataio.export();
@@ -26,7 +26,7 @@ Env.setOptions(envOpts, operSets);
 
 const popset = {
   agent: {
-    chromosomeLen: 1,
+    chromosomeLen: 2,
     lossFunc: Loss.absoluteAvg,
     linkFunc: Link.none,
     chromesome: {
@@ -41,7 +41,7 @@ const popset = {
 
 const start = Date.now();
 const myPop = new Population(popset);
-for (let i = 0; i < 2000; i++) {
+for (let i = 0; i < 4000; i++) {
   myPop.alive(xdata, ydata);
   if (i % 100 === 0) {
     const [ best ] = myPop.getTop();
