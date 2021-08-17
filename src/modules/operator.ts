@@ -2,45 +2,19 @@ import { isFunction } from '../utils/helper';
 import { OperSets } from '../types';
 
 const BuildInFuncs: object = {
-  '+': (a: number, b: number) => {
-    return a + b;
-  },
-  '-': (a: number, b: number) => {
-    return a - b;
-  },
-  '*': (a: number, b: number) => {
-    return a * b;
-  },
-  '/': (a: number, b: number) => {
-    return a / b;
-  },
-  '*2': (a: number) => {
-    return a * a;
-  },
-  sqrt: (a: number) => {
-    return Math.sqrt(a);
-  },
-  log: (a: number) => {
-    return Math.log(a);
-  },
-  pow: (a: number, b: number) => {
-    return Math.pow(a, b);
-  },
-  sin: (a: number) => {
-    return Math.sin(a);
-  },
-  cos: (a: number) => {
-    return Math.cos(a);
-  },
-  tanh: Math.tanh,
-  e: () => {
-    return Math.E;
-  },
-  half: (a: number) => {
-    return a / 2;
-  }
+  '+': (a: number, b: number) => a + b,
+  '-': (a: number, b: number) => a - b,
+  '*': (a: number, b: number) => a * b,
+  '/': (a: number, b: number) => a / b,
+  '*2': (a: number) => a * a,
+  sqrt: (a: number) => Math.sqrt(a),
+  log: (a: number) => Math.log(a),
+  pow: (a: number, b: number) => Math.pow(a, b),
+  sin: (a: number) => Math.sin(a),
+  cos: (a: number) => Math.cos(a),
+  e: () => Math.E,
+  '/2': (a: number) => a / 2,
 }
-
 class Operator {
   funcs: object
   vars: object

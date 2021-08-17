@@ -21,6 +21,7 @@ class Population {
   private total: number
   private lastLoss: number
   private startMutateRate: number
+  outShape: number
   epochs: number
 
   constructor(option: PopulationOption) {
@@ -32,6 +33,7 @@ class Population {
     this.total = total;
     this.lastLoss = 0;
     this.epochs = 0;
+    this.outShape = option.agent.chromosomeLen || 1;
     this.startMutateRate = Number(Env.get('mutateRate'));
     this.agents = Population.createAgents(total, this.agentOption);
   }
@@ -55,11 +57,7 @@ class Population {
    */
   alive(xdata: DataInput[], ydata: number[][]) {
     this.agents.forEach((ag, idx) => {
-      try {
-        ag.loss = sum(ag.agent.getFitness(xdata, ydata));
-      } catch (err) {
-        throw err;
-      }
+      ag.loss = sum(ag.agent.getFitness(xdata, ydata));
     });
     this.agents.sort((a, b) => {
       return a.loss - b.loss;

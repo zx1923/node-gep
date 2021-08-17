@@ -105,16 +105,6 @@ class Agent {
   }
 
   /**
-   * 根据染色体的适应度进行排序
-   * @param chromoList 染色体数组
-   */
-  static fitnessSort(chromoList: ChromoItem[]) {
-    chromoList.sort((a, b) => {
-      return a.lossValue - b.lossValue;
-    });
-  }
-
-  /**
    * 计算染色体的值
    * @param chromoList 染色体数组
    * @returns 
