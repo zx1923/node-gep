@@ -1,11 +1,12 @@
 {
   "name": "gepjs",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A GEP algorithm framework developed using nodejs",
   "main": "index.js",
   "scripts": {
     "clean:dist": "gulp clean:dist",
     "lib": "webpack --config webpack.config.js --mode production",
+    "lib-dev": "webpack --config webpack.config.js --mode development",
     "build:lib": "gulp",
     "demo:brow": "webpack --config webpack.demo.js --mode development",
     "test": "gulp dev && jest tests/ --coverage",
