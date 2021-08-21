@@ -18,7 +18,7 @@ class Loss {
   }
 
   // 分类距离误差
-  static categorical_dist(out: number[][], target: number[][]) {
+  static categorical_disc(out: number[][], target: number[][]) {
     let sum = 0;
     out.forEach((line, idx) => {
       sum += Math.abs(argmax(line) - argmax(target[idx]));
