@@ -5,7 +5,7 @@ operators.setVars('x');
 const operSets = operators.toArray();
 
 const envOpts = {
-  headLen: 5,
+  headLen: 4,
   mutateRate: 0.3,
   mixinRate: 0.3,
   reviseRate: 0.00001,
@@ -14,10 +14,11 @@ const envOpts = {
 const dataio = new DataIO();
 function demo(params) {
   return Math.cos(params / 2) + Math.sqrt(params / 3) - Math.sin(params) + Math.random();
+  // return 3.14 * params * params + params / 2;
 }
 
-for (let i = 0; i < 100; i += 0.5) {
-  dataio.add({ x: i }, [demo(i), demo(i)]);
+for (let i = 0; i < 50; i += 0.5) {
+  dataio.add({ x: i }, demo(i));
 }
 
 const { x: xdata, y: ydata } = dataio.export();
@@ -26,26 +27,25 @@ Env.setOptions(envOpts, operSets);
 
 const popset = {
   agent: {
-    chromosomeLen: 2,
-    lossFunc: Loss.absoluteAvg,
-    linkFunc: Link.none,
+    chromosomeLen: 1,
+    lossFunc: Loss.absolute_mean,
     chromesome: {
-      shape: [1, 3],
+      shape: [1, 4],
       linkFunc: Link.none,
       activation: Activation.none,
     }
   },
-  total: 50,
+  total: 100,
   topn: 1
 }
 
 const start = Date.now();
 const myPop = new Population(popset);
-for (let i = 0; i < 4000; i++) {
+for (let i = 0; i < 5000; i++) {
   myPop.alive(xdata, ydata);
   if (i % 100 === 0) {
     const [ best ] = myPop.getTop();
-    console.log(`${i}:`, Env.get('mutateRate'), best.loss, best.agent.getEncodeChromosomes()[0].genes.join(','));
+    console.log(`${i}:`, Env.get('mutateRate'), best.loss, best.agent.getEncodeChromosomes()[0].genes.join(' <-> '));
   }
   myPop.crossover();
 }

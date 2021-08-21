@@ -2,7 +2,7 @@ import Agent from "./agent";
 import Env from "./env";
 import Chromosome from "./chromosome";
 import { PopulationOption, AgentOption, DataInput, ChromoGeneParts, ChromoEncodeGenes } from "../types";
-import { getRandomRange, replaceArrayPart, sum } from "../utils/helper";
+import { getRandomRange, replaceArrayPart } from "../utils/helper";
 
 interface AgentItem {
   agent: Agent
@@ -57,7 +57,7 @@ class Population {
    */
   alive(xdata: DataInput[], ydata: number[][]) {
     this.agents.forEach((ag, idx) => {
-      ag.loss = sum(ag.agent.getFitness(xdata, ydata));
+      ag.loss = ag.agent.getFitness(xdata, ydata);
     });
     this.agents.sort((a, b) => {
       return a.loss - b.loss;

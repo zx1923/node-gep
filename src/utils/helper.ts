@@ -144,7 +144,21 @@ function sum(args: number[]) {
   let val = 0;
   args.forEach(el => val += el);
   return val;
-} 
+}
+
+/**
+ * 找到最大值索引
+ * @param p 数组
+ * @returns 
+ */
+function argmax(p: number[]) {
+  const max = p[0];
+  let maxIdx = 0;
+  p.forEach((el, i) => {
+    if (max < el) maxIdx = i;
+  });
+  return maxIdx;
+};
 
 export {
   getTypeOf,
@@ -159,4 +173,5 @@ export {
   getRandomRange,
   replaceArrayPart,
   sum,
+  argmax,
 };

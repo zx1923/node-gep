@@ -1,10 +1,9 @@
 import Chromosome from './chromosome';
 import Loss from '../modules/loss';
-import { AgentOption, ChromosomeOption, AgentChromeLinkFunc, AgentLossFunc, DataInput, ChromoGeneParts, ChromoEncodeGenes } from '../types';
-import Link from '../modules/link';
+import { AgentOption, ChromosomeOption, AgentLossFunc, DataInput, ChromoGeneParts, ChromoEncodeGenes } from '../types';
 
 interface ChromoValueResult {
-  reduceValue: Array<number>
+  reduceValue: number[]
   shapeValue: number[][]
 };
 
@@ -14,15 +13,15 @@ interface ChromoItem {
 };
 
 class Agent {
+  private loss: number
   chromosomeList: ChromoItem[]
-  chromoLinkFunc: typeof AgentChromeLinkFunc // TODO: 连接函数，保留
   chromoLossFunc: typeof AgentLossFunc
 
   constructor(options: AgentOption, chromoSets?: Chromosome[]) {
-    const { chromosomeLen = 1, chromesome, linkFunc, lossFunc } = options;
-    this.chromoLinkFunc = linkFunc || Link.addUp;
+    const { chromosomeLen = 1, chromesome, lossFunc } = options;
     this.chromoLossFunc = lossFunc || Loss.absolute;
 
+    this.loss = -1;
     if (chromoSets !== undefined && Array.isArray(chromoSets) && chromoSets.length) {
       this.chromosomeList = [];
       chromoSets.forEach(el => {
@@ -60,12 +59,8 @@ class Agent {
    * 计算适应度
    */
   getFitness(xdata: DataInput[], ydata: number[][]) {
-    this.calculateFitness(xdata, ydata);
-    const fitRes: number[] = [];
-    this.chromosomeList.forEach(el => {
-      fitRes.push(el.lossValue);
-    });
-    return fitRes;
+    this.loss = this.calculateLoss(xdata, ydata);
+    return this.loss;
   }
 
   /**
@@ -73,15 +68,19 @@ class Agent {
    * @param xdata 输入值
    * @param ydata 输出值
    */
-  calculateFitness(xdata: DataInput[], ydata: number[][]) {
+  calculateLoss(xdata: DataInput[], ydata: number[][]) {
     if (!xdata.length || xdata.length !== ydata.length) {
       throw new Error(`The input data is invalid`);
     }
-    // 每条染色体根据其对应通道不同单独计算损失
-    this.chromosomeList.forEach((item, idx) => {
-      const reduceResArray = item.chromo.getReduceValue(xdata);
-      item.lossValue = this.chromoLossFunc(reduceResArray, ydata, idx);
+    const outResArr: number[][] = [];
+    ydata.forEach((line, idx) => {
+      let outItem: number[] = [];
+      this.chromosomeList.forEach(item => {
+        outItem = outItem.concat(item.chromo.getReduceValue(xdata[idx]));
+      });
+      outResArr.push(outItem);
     });
+    return this.chromoLossFunc(outResArr, ydata);
   }
 
   /**

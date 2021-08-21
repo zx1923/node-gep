@@ -1,6 +1,6 @@
 import Gene from './gene';
 import { isArray, } from '../utils/helper';
-import { ChromosomeOption, OperItem, ChromosomeReduceFunc, DataInput, ChromoGeneParts, GenePartItem, EncodeGenes } from '../types';
+import { ChromosomeOption, ChromosomeReduceFunc, DataInput, ChromoGeneParts, GenePartItem, EncodeGenes } from '../types';
 import Activation from '../modules/activation';
 import Link from '../modules/link';
 
@@ -8,8 +8,7 @@ class Chromosome {
   private genesMap: Gene[][]
   shape: [number, number]
   linkFunc: typeof ChromosomeReduceFunc   // TODO: 连接函数，保留
-  private lastShapeValue: Array<number>[]
-  private lastReduceValue: number
+  private lastShapeValue: number[][]
   private activeFunc: Function
 
   constructor(option: ChromosomeOption, chromoGeneSets: Gene[][] = []) {
@@ -19,7 +18,6 @@ class Chromosome {
     this.activeFunc = activation || Activation.none;
 
     this.lastShapeValue = [];
-    this.lastReduceValue = 0;
     if (!chromoGeneSets || !isArray(chromoGeneSets) || !chromoGeneSets.length) {
       this.genesMap = Chromosome.createGenesUseShape(this.shape);
     } else {
@@ -57,13 +55,12 @@ class Chromosome {
     xinputArray.forEach(inpx => {
       let sum = 0;
       const func = (row, col) => {
-        const val = this.genesMap[row][col].getValue(inpx);
+        const val = this.activeFunc(this.genesMap[row][col].getValue(inpx));
         sum += val;
-        return this.activeFunc(val);
+        return val;
       };
       this.lastShapeValue = Chromosome.reduce(this.shape, func);
-      this.lastReduceValue = sum;
-      result.push(this.activeFunc(sum));
+      result.push(sum);
     });
     return result;
   }
@@ -74,7 +71,8 @@ class Chromosome {
   getShapeValue(xdata: DataInput) {
     if (!this.lastShapeValue || !this.lastShapeValue.length) {
       const func = (row, col) => {
-        return this.genesMap[row][col].getValue(xdata);
+        const res =  this.genesMap[row][col].getValue(xdata);
+        return this.activeFunc(res);
       };
       this.lastShapeValue = Chromosome.reduce(this.shape, func);
     }

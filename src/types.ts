@@ -1,7 +1,7 @@
 
 export declare function ChromosomeReduceFunc(row: number, col:number);
 export declare function AgentChromeLinkFunc(prev, curt);
-export declare function AgentLossFunc(out: number[], target: number[][], channel: number);
+export declare function AgentLossFunc(out: number[][], target: number[][]);
 export interface ChromosomeOption {
   shape: [number, number]               // 基因形
   linkFunc?: typeof ChromosomeReduceFunc // 基因连接函数
@@ -12,8 +12,6 @@ export interface AgentOption {
   chromesome: ChromosomeOption
   chromosomeLen?: number
   lossFunc?: typeof AgentLossFunc
-  linkFunc?: typeof AgentChromeLinkFunc
-  activation?: Function
 }
 
 export interface OperItem {

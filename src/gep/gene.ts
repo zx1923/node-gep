@@ -6,14 +6,16 @@ import Env from './env';
 
 class Gene {
   private headLen: number
-  private genes: Array<OperItem>
-  private expressionTree: Array<ComputeNode>
+  private genes: OperItem[]
+  private expressionTree: ComputeNode[]
   private operSets: OperSets
+  activeFunc: Function
 
-  constructor(geneSets?: Array<OperItem>) {
+  constructor(geneSets?: OperItem[]) {
     const { headLen, maxpLen } = Env.getOptions();
     this.headLen = headLen;
     this.operSets = Env.operSets;
+    this.activeFunc = Activation.none;
     
     if (geneSets == undefined || !Array.isArray(geneSets) || !geneSets.length) {
       this.genes = Gene.createGenesArray(headLen, maxpLen, this.operSets);
@@ -52,8 +54,8 @@ class Gene {
    * @returns 
    */
   getValue(xdata: DataInput) {
-    const result = Gene.calculate(this.expressionTree, xdata);
-    return result[0];
+    const [ result ] = Gene.calculate(this.expressionTree, xdata);
+    return this.activeFunc((isNaN(result) || !isFinite(result)) ? Number.MAX_SAFE_INTEGER : result);
   }
 
   /**
@@ -104,7 +106,7 @@ class Gene {
    * @param tnode ComputeNode对象
    * @returns 
    */
-  static createComputeTree(genes: Array<OperItem>, index = 0, tnode?: Array<ComputeNode>): Array<ComputeNode> {
+  static createComputeTree(genes: OperItem[], index = 0, tnode?: ComputeNode[]): ComputeNode[] {
     if (index === 0) {
       tnode = [ new ComputeNode(genes[index]) ];
       return this.createComputeTree(genes, index + 1, tnode);
@@ -135,8 +137,8 @@ class Gene {
    * 计算基因表达式的值
    * @param geneObj 基因对象
    */
-  static calculate(expressNodes: Array<ComputeNode>, xdata: DataInput) {
-    const result: Array<number> = [];
+  static calculate(expressNodes: ComputeNode[], xdata: DataInput) {
+    const result: number[] = [];
     expressNodes.forEach(node => {
       if (!node.params.length) {
         result.push(xdata[node.name] ? xdata[node.name] : node.func());
@@ -175,10 +177,10 @@ class Gene {
    * @param opers 函数符
    * @param ends 终止符
    */
-  static createGenesArray(headLen: number, maxpLen: number, operSets: OperSets): Array<OperItem> {
+  static createGenesArray(headLen: number, maxpLen: number, operSets: OperSets): OperItem[] {
     const endLen = headLen * (maxpLen - 1) + 1;
     const headsSets = [...operSets.funcs, ...operSets.vars];
-    let genesArray: Array<OperItem> = [];
+    let genesArray: OperItem[] = [];
     genesArray = genesArray.concat(getRandomFromArray(headsSets, headLen));
     genesArray = genesArray.concat(getRandomFromArray(operSets.vars, endLen));
     return genesArray;
