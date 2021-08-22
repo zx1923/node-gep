@@ -66,6 +66,7 @@ import { Gene } from 'gepjs'
 
 - [线性回归](https://gep.smartline.cc/examples/linear-regression.html);
 - [非线性回归](https://gep.smartline.cc/examples/nonlinear-regression.html);
+- [波士顿房价预测](https://gep.smartline.cc/examples/housing-regression.html);
 
 分类问题：
 
