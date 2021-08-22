@@ -6,6 +6,7 @@ import Env from './env';
 
 class Gene {
   private headLen: number
+  private endLen: number
   private genes: OperItem[]
   private expressionTree: ComputeNode[]
   private operSets: OperSets
@@ -14,11 +15,12 @@ class Gene {
   constructor(geneSets?: OperItem[]) {
     const { headLen, maxpLen } = Env.getOptions();
     this.headLen = headLen;
+    this.endLen = headLen * (maxpLen - 1) + 1;
     this.operSets = Env.operSets;
     this.activeFunc = Activation.none;
     
     if (geneSets == undefined || !Array.isArray(geneSets) || !geneSets.length) {
-      this.genes = Gene.createGenesArray(headLen, maxpLen, this.operSets);
+      this.genes = Gene.createGenesArray(headLen, this.endLen, maxpLen, this.operSets);
     } else {
       this.genes = [...geneSets];
     }
@@ -93,10 +95,19 @@ class Gene {
   mutate() {
     const headsSets = [...this.operSets.funcs, ...this.operSets.vars];
     const mutateRate = Env.get('mutateRate');
+    // func mutate
+    if (Math.random() >= 0.5) {
+      while (Math.random() <= mutateRate) {
+        const idx = Math.floor(Math.random() * this.headLen);
+        this.genes[idx] = getRandomFromArray(headsSets, 1)[0];
+      };
+      return;
+    }
+    // vars mutate
     while (Math.random() <= mutateRate) {
-      const idx = Math.floor(Math.random() * this.headLen);
-      this.genes[idx] = getRandomFromArray(headsSets, 1)[0];
-    };
+      const idx = this.headLen + Math.floor(Math.random() * this.endLen);
+      this.genes[idx] = getRandomFromArray([ ...this.operSets.vars ], 1)[0];
+    }
   }
 
   /**
@@ -177,8 +188,7 @@ class Gene {
    * @param opers 函数符
    * @param ends 终止符
    */
-  static createGenesArray(headLen: number, maxpLen: number, operSets: OperSets): OperItem[] {
-    const endLen = headLen * (maxpLen - 1) + 1;
+  static createGenesArray(headLen: number, endLen: number, maxpLen: number, operSets: OperSets): OperItem[] {
     const headsSets = [...operSets.funcs, ...operSets.vars];
     let genesArray: OperItem[] = [];
     genesArray = genesArray.concat(getRandomFromArray(headsSets, headLen));
